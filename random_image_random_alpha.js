@@ -1,5 +1,6 @@
-//@include '~/Pictures/scripts/functions.js'
-//@include '~/Pictures/scripts/ps_functions.js'
+//@include '~/Pictures/scripts/imports/functions.js'
+//@include '~/Pictures/scripts/imports/ps_functions.js'
+//@include '~/Pictures/scripts/imports/resize_doc.js'
 
 var resize_to = 0
 var resize_mode = 2
