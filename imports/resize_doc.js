@@ -1,15 +1,32 @@
 function resizeDoc(nw, nh, m) {
-
 	// m = resize mode
 	// m = 0 is concertina 
 	// m = 1 is blow up
 	// m = 2 is stretch
     // m = 3 is biggest size possible without changing aspect ratio
-	
 	var doc = app.activeDocument
 	var dal = doc.artLayers
 	var dw = doc.width
 	var dh = doc.height
+    var aspect_orig = dw / dh
+    var aspect_mod = nw / nh
+
+    // Exceptional case: if aspect ratios are identical or if 
+    // resize mode is 2, we simply resize the doc to the desired dimensions with no 
+    // additional processing and break the function
+    if (m == 2 || aspect_orig == aspect_mod) {
+        doc.resizeImage(nw, nh)
+        return true
+    }
+
+    switch(m) {
+        case 0:
+            break;
+        case 1:
+            break;
+        case 3: 
+            break;
+    }
 	
 	// First test is whether the aspect ratio of the image to be resized is 
 	// smaller, larger, or the same as the resize target
@@ -99,11 +116,7 @@ function resizeDoc(nw, nh, m) {
 			doc.flatten()
 			dal[0].isBackgroundLayer = false
 		
-		} else if (m == 2) {
-		
-			doc.resizeImage(nw, nh)
-		
-		}
+		} 
 	
 	
 	} else if (dw / dh > nw / nh) {
@@ -193,20 +206,7 @@ function resizeDoc(nw, nh, m) {
 			doc.flatten()
 			dal[0].isBackgroundLayer = false
 		
-		} else if (m == 2) {
-			
-			doc.resizeImage(nw,nh)
-		
-		}
-	
-	
-	} else if (dw / dh == nw / nh) {
-	// The final option is if the image to be resized and resize target share the same
-	// aspect ratio
-	
-		doc.resizeImage(nw, nh)
-	
-	}
+		} 
 	  
 
 }
