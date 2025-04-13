@@ -1,11 +1,12 @@
-//@include '~/Pictures/scripts/functions.js'
-//@include '~/Pictures/scripts/ps_functions.js'
+//@include '~/Pictures/scripts/imports/functions.js'
+//@include '~/Pictures/scripts/imports/ps_functions.js'
 
-var columns = 1000
-var rows = 1000
+var columns = 5
+var rows = 5
 
 function do_something() {
-    doc.selection.fill(ranColHSB(50, 50, 50, 20, 20, 20))
+    // app.activeDocument.selection.fill(ranColHSB(300, 50, 50, 35, 20, 40))
+    random_image()
 }
 
 function main(columns, rows) {
@@ -14,11 +15,11 @@ function main(columns, rows) {
     var cell_height = doc.height / rows
     for (y = 0; y < rows; y++) {
         for (x = 0; x < columns; x++) {
-            doc.selection.select(getSC(x * cell_width, y * cell_height, (x + 1) * cell_width, (y + 1) * cell_height))
+            doc.selection.select(get_sc(x * cell_width, y * cell_height, (x + 1) * cell_width, (y + 1) * cell_height))
             do_something()
             doc.selection.deselect()
         }
     }
 }
 
-main()
+main(columns, rows)

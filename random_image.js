@@ -1,9 +1,11 @@
-//@include '~/Pictures/scripts/functions.js'
-//@include '~/Pictures/scripts/ps_functions.js'
+//@include '~/Pictures/scripts/imports/functions.js'
+//@include '~/Pictures/scripts/imports/ps_functions.js'
+//@include '~/Pictures/scripts/imports/resize_doc.js'
+
 
 var resize_to = 1
-var resize_mode = 0
-var folder = 'iphone'
+var resize_mode = 3
+var folder = 'drawings/clips_converted'
 
 function get_resize_dims(resize_to) {
     var doc = app.activeDocument
@@ -44,7 +46,7 @@ function main(resize_to, resize_mode, folder) {
     dal = doc.artLayers
     doc.flatten()
     dal[0].isBackgroundLayer = false
-    resizeDoc(resize_dims[0], resize_dims[1], resize_mode)
+    resize_doc(resize_dims[0], resize_dims[1], resize_mode)
     // ADD A WAVE EFFECT HERE
     // Copy the reized image, close the file, and paste in the canvas image created previously
     doc.selection.selectAll()

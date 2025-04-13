@@ -1,6 +1,7 @@
-//@include '~/Pictures/scripts/functions.js'
+//@include '~/Pictures/scripts/imports/functions.js'
+//@include '~/Pictures/scripts/imports/ps_functions.js'
 
-function resizeDoc(nw, nh, m) {
+function resize_doc(nw, nh, m) {
 	// m = resize mode
 	// m = 0 is concertina 
 	// m = 1 is blow up
@@ -35,30 +36,7 @@ function resizeDoc(nw, nh, m) {
 			doc.selection.select(get_sc(0, 0, dw, dh))
 			dal[0].isBackgroundLayer = false
 			doc.selection.copy(true)
-			for (c = 0; c < flipNumber; c++) {
-				if (enlarge_h) {
-					sc = get_sc((c * dw) + dw, 0, (c * dw) + (dw * 2), dh)
-				} else {
-					sc = get_sc(0, (c * dh) + dh, dw, (c * dh) + (dh * 2))
-				}
-				doc.selection.select(sc)
-				doc.paste()
-				dal[0].translate(-2, 0)
-				// Every other slice needs to be flipped
-				if (c%2 == 0) { 
-					if (enlarge_h) { flipHor() } else { flipVer() }
-				}
-				//The final image is treated differently
-				if (c == flipNumber - 1) {
-					if (extend_h) {
-						var xShift = dw - (nw - ((c * dw) + dw))
-						doc.artLayers[0].translate(xShift-2,0)
-					} else {
-						var xShift = dh - (nh - ((c * dh) + dh))
-						doc.artLayers[0].translate(0,xShift-2)
-					}
-				}
-			}
+			concertina_flips(dw, dh, nw, nh, flipNumber, extend_h)
 			doc.flatten()
 			dal[0].isBackgroundLayer = false
             break;
@@ -76,4 +54,33 @@ function resizeDoc(nw, nh, m) {
 			dal[0].isBackgroundLayer = false
             break;
     }
+}
+
+function concertina_flips(dw, dh, nw, nh, flipNumber, extend_h) {
+	var doc = app.activeDocument
+	var dal = doc.artLayers
+	for (c = 0; c < flipNumber; c++) {
+		if (extend_h) {
+			sc = get_sc((c * dw) + dw, 0, (c * dw) + (dw * 2), dh)
+		} else {
+			sc = get_sc(0, (c * dh) + dh, dw, (c * dh) + (dh * 2))
+		}
+		doc.selection.select(sc)
+		doc.paste()
+		dal[0].translate(-2, 0)
+		// Every other slice needs to be flipped
+		if (c%2 == 0) { 
+			if (extend_h) { flipHor() } else { flipVer() }
+		}
+		//The final image is treated differently
+		if (c == flipNumber - 1) {
+			if (extend_h) {
+				var xShift = dw - (nw - ((c * dw) + dw))
+				doc.artLayers[0].translate(xShift-2,0)
+			} else {
+				var xShift = dh - (nh - ((c * dh) + dh))
+				doc.artLayers[0].translate(0,xShift-2)
+			}
+		}
+	}
 }
