@@ -8,7 +8,7 @@ var dims = [bounds[2]-bounds[0],bounds[3]-bounds[1]]
 var left = bounds[0]
 var top = bounds[1]
 
-var shuffle = true; 
+
 // Do we need to cut out the shape afterwards?
 var wholeDoc = dims[0] < doc.width || dims[1] < doc.height ? false : true
 
