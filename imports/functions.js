@@ -1,4 +1,8 @@
 function get_sc(l, t, r, b) {
+    l = Math.round(l)
+    t = Math.round(t)
+    r = Math.round(r)
+    b = Math.round(b)
     return [[l,t],[r,t],[r,b],[l,b]]
 }
 
