@@ -1,30 +1,25 @@
 //@include '~/Pictures/scripts/imports/functions.js'
 //@include '~/Pictures/scripts/imports/ps_functions.js'
 
-var columns = 1
-var rows = 5
+var columns = 5
+var rows = 1
 
 function do_something() {
     var doc = app.activeDocument
     var max = 500 + random(299)
 	var min = max - (30+random(70))
-	var gen = 5
-    var waves = [WaveType.SINE, WaveType.SQUARE]
-	var maxamp = Math.ceil((60 - gen) / 8)
-    var wrap = [UndefinedAreas.REPEATEDGEPIXELS, UndefinedAreas.WRAPAROUND];
-    var w = []
-	w[0] = random(50)
-	w[1] = min
-	w[2] = max
-	w[3] = 1
-	w[4] = 1+maxamp
-	w[5] = random(100)
-	w[6] = random(100)
-	w[7] = waves[1]
-	w[8] = wrap[0]
-	w[9] = 0
-
-	doc.activeLayer.applyWave(w[0],w[1],w[2],w[3],w[4],w[5],w[6],w[7],w[8],w[9])
+	doc.activeLayer.applyWave(
+        random(50),
+        min,
+        max,
+        1,
+        1 + Math.ceil((60 - 5) / 8),
+        random(100),
+        random(100),
+        WaveType.SQUARE,
+        UndefinedAreas.WRAPAROUND,
+        0
+    )
 }
 
 function main(columns, rows) {

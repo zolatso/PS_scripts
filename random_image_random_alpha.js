@@ -32,8 +32,24 @@ function main(resize_to, resize_mode, folder_a, folder_b) {
     var file_list_a = get_files_in_folder(folder_a)
     var file_list_b = get_files_in_folder(folder_b)
 
+    assemble_image_in_separate_document(resize_dims, resize_mode, file_list_a, file_list_b)
+    
+    // Location of pasting in original document uses a selection based on the original selection
+    doc = app.activeDocument
+    dal = doc.artLayers
+    doc.selection.select(paste_location)
+    doc.paste()
+    // Apply the channel we created at the start of the script
+    doc.selection.load(create_channel)
+    applySelectionAsLayerMask()
+    doc.selection.deselect()
+    create_channel.remove()
+}
+
+function assemble_image_in_separate_document(resize_dims, resize_mode, file_list_a, file_list_b) {
     // Create new document
     app.documents.add(resize_dims[0], resize_dims[1])
+    var doc = app.activeDocument
     var dal = app.activeDocument.artLayers
     dal[dal.length-1].isBackgroundLayer = false
 
@@ -48,7 +64,7 @@ function main(resize_to, resize_mode, folder_a, folder_b) {
         dal = doc.artLayers
         doc.flatten()
         dal[0].isBackgroundLayer = false
-        resizeDoc(resize_dims[0], resize_dims[1], resize_mode)
+        resize_doc(resize_dims[0], resize_dims[1], resize_mode)
         // ADD A WAVE EFFECT HERE
         // Copy the reized image, close the file, and paste in the canvas image created previously
         doc.selection.selectAll()
@@ -57,25 +73,25 @@ function main(resize_to, resize_mode, folder_a, folder_b) {
         // Pasting behavior differs depending on whether its supposed to be the base layer or channel layer
         doc = app.activeDocument
         dal = doc.artLayers
-        doc.selection.selectAll()
-        doc.paste()
+        // Channel layer dealt with first
+        if (i == 1) {
+            var paste_channel = doc.channels.add()
+            doc.selection.selectAll()
+            doc.paste()
+            doc.activeChannels = doc.componentChannels
+			doc.activeLayer = doc.artLayers[0]
+			doc.selection.load(paste_channel)
+			doc.selection.clear()
+			paste_channel.remove()
+        } else if (i == 0) {
+            doc.paste()
+        }
         doc.selection.deselect()
     }
-
     // Copy from temporary canvas and close document
     doc.selection.selectAll()
-    doc.selection.copy(true)
+    doc.selection.copy()
     doc.close(SaveOptions.DONOTSAVECHANGES)
-    // Location of pasting in original document uses a selection based on the original selection
-    doc = app.activeDocument
-    dal = doc.artLayers
-    doc.selection.select(paste_location)
-    doc.paste()
-    // Apply the channel we created at the start of the script
-    doc.selection.load(create_channel)
-    applySelectionAsLayerMask()
-    doc.selection.deselect()
-    create_channel.remove()
 }
 
 main(resize_to, resize_mode, folder_a, folder_b)

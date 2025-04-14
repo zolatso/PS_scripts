@@ -1,14 +1,7 @@
 //@include '~/Pictures/scripts/imports/functions.js'
 //@include '~/Pictures/scripts/imports/resize_doc.js'
 
-
-var random_file = 1
-var folder = "~/Pictures/md/diagrams"
-var specific_file = "~/Pictures/md/diagrams/F1fI5WnagAIHDfo.jpeg"
-var scale = 20
-var offset = 1
-
-function main(random_file, folder, specific_file, scale, offset) {
+function tiler(random_file, folder, specific_file, scale, offset) {
     var doc = app.activeDocument
     var bounds = doc.selection.bounds
     var selection_xy = [bounds[2]-bounds[0], bounds[3]-bounds[1]]
@@ -121,5 +114,3 @@ function fill_in_other_rows(width, height, offset) {
         }
     }
 }
-
-main(random_file, folder, specific_file, scale, offset)
