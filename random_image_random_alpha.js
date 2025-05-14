@@ -2,10 +2,10 @@
 //@include '~/Pictures/scripts/imports/ps_functions.js'
 //@include '~/Pictures/scripts/imports/resize_doc.js'
 
-var resize_to = 0
+var resize_to = 1
 var resize_mode = 2
 var folder_a = 'iphone'
-var folder_b = 'md/galleries'
+var folder_b = 'iphone'
 
 function get_resize_dims(resize_to) {
     var doc = app.activeDocument
@@ -17,6 +17,28 @@ function get_resize_dims(resize_to) {
         resize_dims.push(sel_bounds[2] - sel_bounds[0], sel_bounds[3] - sel_bounds[1])
     }
     return resize_dims
+}
+
+function effects(){
+    var doc = app.activeDocument
+    var dal = doc.artLayers
+    dal[0].applyWave(
+        2, 
+        700,
+        900,
+        1,
+        60,
+        100,
+        100,
+        WaveType.SQUARE,
+        UndefinedAreas.WRAPAROUND,
+        0
+    )
+    dal[0].duplicate()
+    dal[0].applyHighPass(40)
+    dal[0].blendMode = BlendMode.OVERLAY
+    dal[0].opacity = 50
+    dal[0].merge()
 }
 
 function main(resize_to, resize_mode, folder_a, folder_b) {
@@ -65,7 +87,7 @@ function assemble_image_in_separate_document(resize_dims, resize_mode, file_list
         doc.flatten()
         dal[0].isBackgroundLayer = false
         resize_doc(resize_dims[0], resize_dims[1], resize_mode)
-        // ADD A WAVE EFFECT HERE
+        effects()
         // Copy the reized image, close the file, and paste in the canvas image created previously
         doc.selection.selectAll()
         doc.selection.copy()

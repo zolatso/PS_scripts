@@ -28,7 +28,12 @@ function main(columns, rows) {
     var cell_height = doc.height / rows
     for (y = 0; y < rows; y++) {
         for (x = 0; x < columns; x++) {
-            doc.selection.select(get_sc(x * cell_width, y * cell_height, (x + 1) * cell_width, (y + 1) * cell_height))
+            doc.selection.select(get_sc(
+                x * cell_width, 
+                y * cell_height, 
+                (x + 1) * cell_width, 
+                (y + 1) * cell_height
+            ))
             do_something()
             doc.selection.deselect()
         }
