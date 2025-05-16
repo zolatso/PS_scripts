@@ -1,17 +1,6 @@
-function value(x) {
-    return (0 - (x / 2)) + (Math.random() * x)
-}
+//@include '~/Pictures/scripts/imports/functions.js'
 
-var doc = app.activeDocument
-doc.selection.copy(true)
-doc.paste()
-var rv = value(50)
-var gv = value(50)
-var bv = value(50)
-doc.activeLayer.adjustColorBalance(
-    [rv, gv, bv],
-    [rv, gv, bv],
-    [rv, gv, bv],
-    false
-)
+var x = 50
+randomly_vary_color_balance(x, true)
+
 

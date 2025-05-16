@@ -1,13 +1,4 @@
-// Needs 6 variables: angle of lattice, thickness of lines,
-// 3 x colour randomness extent variables for LAB axes
-// and a hatch density number (1 = no gaps, then increases)
-// with a no-gap density, the overlaid thread effect looks shit
-//@include '~/Google Drive/PS Scripts/functions.js'
 
-app.displayDialogs = DialogModes.NO;
-app.preferences.rulerUnits = Units.PIXELS;
-cTID = function(s) { return app.charIDToTypeID(s); };
-sTID = function(s) { return app.stringIDToTypeID(s); };
 
 var doc = app.activeDocument;
 var layer = doc.activeLayer.name;
@@ -64,41 +55,6 @@ var hatch = vars[5];
 
 var alt = true
 var altCounter = 0
-
-// alert(altColor[altCounter][0])
-
-////////////////////////////////////
-// INITIAL LAYER ACTIONS/////////
-// Create channel from current layer
-// doc.activeLayer.adjustLevels(0,2,1.00,0,255);
-// doc.selection.selectAll();
-// doc.selection.copy();
-var pig = doc.channels.add();
-pig.name = "cutter0";
-doc.activeChannels = doc.componentChannels
-selectLayerOutline()
-doc.selection.store(pig)
-// pasteInPlace();
-
-
-// Put channels back
-for (y = 0; y < doc.channels.length; y++){
-if (y < doc.channels.length - 1) {
-doc.channels[y].visible = true;
-} else {
-doc.channels[y].visible = false;
-}
-}
-doc.activeChannels = doc.componentChannels;
-
-// Clear layer 
-doc.selection.selectAll();
-doc.selection.clear();
-//////////////////////
-
-/////////////////////////////////
-////////// COLOURS ///////////
-//////////////////////////////////	
 
 
 // For loop iterating through selections and filling with colors

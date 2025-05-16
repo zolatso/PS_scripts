@@ -27,9 +27,9 @@ function effects(){
         700,
         900,
         1,
-        60,
-        100,
-        100,
+        40,
+        random(100),
+        random(100),
         WaveType.SQUARE,
         UndefinedAreas.WRAPAROUND,
         0

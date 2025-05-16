@@ -1,25 +1,31 @@
 //@include '~/Pictures/scripts/imports/functions.js'
 //@include '~/Pictures/scripts/imports/ps_functions.js'
 
-var columns = 5
-var rows = 1
+var columns = 6
+var rows = 8
 
 function do_something() {
     var doc = app.activeDocument
     var max = 500 + random(299)
 	var min = max - (30+random(70))
 	doc.activeLayer.applyWave(
-        random(50),
+        3,
         min,
         max,
         1,
-        1 + Math.ceil((60 - 5) / 8),
+        10,
         random(100),
         random(100),
         WaveType.SQUARE,
         UndefinedAreas.WRAPAROUND,
         0
     )
+    doc.activeLayer.applyOffset(
+        random(200), 
+        random(200), 
+        OffsetUndefinedAreas.WRAPAROUND
+    )
+    randomly_vary_color_balance(50, false)
 }
 
 function main(columns, rows) {
