@@ -32,6 +32,14 @@ function colour_rgb(r, g, b) {
     return colour
 }
 
+function color_hsb(h, s, b) {
+    color = new SolidColor
+    color.hsb.hue = h
+    color.hsb.saturation = s
+    color.hsb.brightness = b
+    return color
+}
+
 function get_files_in_folder(folder) {
     var fileTypes = new RegExp(/\.(jpg|tif|psd|png|heic|jpeg)$/i)
     var root = "~/Pictures/"

@@ -356,10 +356,7 @@ function trans_cord(q) {
 }
 
 //degrees to rad
-function deg_to_r(x) {
-	x = x*Math.PI/180;
-	return x;
-}
+
 
 function selectLayerOutline() {
 

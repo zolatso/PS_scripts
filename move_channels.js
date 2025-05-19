@@ -1,6 +1,6 @@
 //@include '~/Pictures/scripts/imports/functions.js'
 
-var max_move = 20
+var max_move = 50
 
 function main(max_move) {
     var doc = app.activeDocument
@@ -44,7 +44,7 @@ function black_background() {
     doc.selection.deselect()
 }
 
-function move_layers(max_move) {
+function move_and_merge_layers(max_move) {
     var doc = app.activeDocument
     // Move
     for (var i = 0; i < 3; i++) {

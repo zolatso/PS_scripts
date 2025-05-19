@@ -1,7 +1,7 @@
 //@include '~/Pictures/scripts/imports/functions.js'
 //@include '~/Pictures/scripts/imports/random_HSB.js'
 
-function threads(angle, thickness, spacing, initial_color, h_vary, s_vary, b_vary) {
+function threads(angle, thickness, spacing, colors, h_vary, s_vary, b_vary) {
     var doc = app.activeDocument
 
     var left = doc.selection.bounds[0]
@@ -19,31 +19,52 @@ function threads(angle, thickness, spacing, initial_color, h_vary, s_vary, b_var
     var push_y = int_vars[1] 
     var slice_quantity = int_vars[2]
 
+	var color_counter = 1
+	var gap_counter = 0
     for (i = 0; i < slice_quantity; i++) {
-        doc.selection.select(select_coordinates(
-            i, 
-            angle, 
-            width, 
-            height, 
-            left, 
-            right, 
-            top, 
-            bottom, 
-            push_x, 
-            push_y
-        ))
-        doc.selection.fill(
-            random_HSB(
-                initial_color.hsb.hue,
-                initial_color.hsb.saturation,
-                initial_color.hsb.brightness,
-                h_vary,
-                s_vary,
-                b_vary,
-            )
-        )
+		if (gap_counter == 0) {
+			var sc = select_coordinates(
+				i, 
+				angle, 
+				width, 
+				height, 
+				left, 
+				right, 
+				top, 
+				bottom, 
+				push_x, 
+				push_y
+			)
+			// I used a return false to test the selection function,
+			// this is no longer really required
+			if (sc) {
+				doc.selection.select(sc)
+			} else {
+				break;
+			}
+			
+			doc.selection.fill(
+				random_HSB(
+					colors[color_counter - 1].hsb.hue,
+					colors[color_counter - 1].hsb.saturation,
+					colors[color_counter - 1].hsb.brightness,
+					h_vary,
+					s_vary,
+					b_vary,
+				)
+			)
+		// This goes inside the 'if' as color counter should only increase
+		// on a line where there has been a fill
+		color_counter = color_counter < colors.length ? color_counter+=1 : 1
+		}
+	gap_counter = gap_counter < spacing ? gap_counter+=1 : 0 
     }
-    doc.selection.load(create_channel)
+	trim_edges(create_channel)
+}
+
+function trim_edges(channel) {
+	var doc = app.activeDocument
+	doc.selection.load(channel)
     try {
         doc.selection.invert()
         doc.selection.clear()
@@ -51,7 +72,7 @@ function threads(angle, thickness, spacing, initial_color, h_vary, s_vary, b_var
     } catch (error) {
         var ignore = 'nothing'
     }
-    create_channel.remove()
+    channel.remove()
 }
 
 function int_var(a, thickness, width, height) {
@@ -89,99 +110,95 @@ function deg_to_r(x) {
 }
 
 function select_coordinates(i, a, width, height, left, right, top, bottom, p_x, p_y) {
-	
-	var b = a > 90 ? 90 - (a - 90): a
-	// Initial counters
-	var z = i + 1
-    var y = i
+	switch (a) {
+		case 0:
+			var sc = get_sc(
+				left, 
+				(i * p_y) + top, 
+				right, 
+				((i + 1) * p_y) + top
+			)
+			return sc
+		case 90:
+			var sc = get_sc(
+				(i * p_x) + left,
+				top,
+				((i + 1) * p_x) + left,
+				bottom
+			)
+			return sc
+		// The most complex option
+		default:
+			// Convert all angles to a 90 degree or less angle
+			// Larger angles will be manually flipped
+			a = a > 90 ? 90 - (a - 90): a
 
-	// Number of slices before change
-	var ydiv = Math.floor(height / p_y);
-	var xdiv = Math.floor(width / p_x);
+			// Number of slices before change
+			var y_slices = Math.ceil(height / p_y)
+			var x_slices = Math.ceil(width / p_x)
 
-	// Second set of counters
-	var x = y - ydiv; 	
-	var w = y - xdiv;
-	
-	// Top right push
-	var rem_tr = p_x * (1 - ((width / p_x) - xdiv));
-	var tr_push = Math.tan(deg_to_r(b)) * rem_tr;
-	
-	// Bottom left 
-	var rem_bl = p_y * (1 - ((height / p_y) - ydiv));
-	var bl_push = rem_bl / Math.tan(deg_to_r(b));
-	
-	var sc = [[],[],[],[]];
-	
-	
-	// set up coordinates
-	
+			// Two counters needed. One for the coordinates that traverse
+			// left and bottom sides, one for top and right sides
+			var lb_counter = i < y_slices ? i : i - y_slices
+			var tr_counter = i < x_slices ? i : i - x_slices
+		
+			// Top right push
+			//var rem_tr = p_x * (1 - ((width / p_x) % 1))
+			var rem_tr = Math.abs(((x_slices) * p_x) - width)
+			var tr_push = rem_tr * Math.tan(deg_to_r(a))
+			//var tr_push = Math.tan(deg_to_r(a)) * rem_tr
+			
+			// Bottom left 
+			var rem_bl = Math.abs(((y_slices) * p_y) - height)
+			var bl_push = rem_bl / Math.tan(deg_to_r(a))
 
-		if (a > 90 && a < 180) {
+			// Get left and bottom coords
+			if (i < y_slices) {
+				var lb_coord_front = [
+					left, 
+					((lb_counter + 1) * p_y) + top,
+				]
+				var lb_coord_back = [
+					left,
+					(lb_counter * p_y) + top,
+				]
+			} else if (i >= y_slices) {
+				var lb_coord_front = [
+					((lb_counter + 1) * p_x) + left + bl_push,
+					bottom
+				]
+				var lb_coord_back = [
+					(lb_counter * p_x) + left + bl_push,
+					bottom
+				]
+				//return false
+			}
 
-			if (y < ydiv) {
-			sc[0][0] = right;
-			sc[0][1] = (z * p_y) + top;
-			sc[3][0] = right; 
-			sc[3][1] = sc[0][1] - p_y;
-			} else {
-			sc[0][0] = (right - bl_push - (x * p_x)); 
-			sc[0][1] = bottom;
-			sc[3][0] = sc[0][0] + p_x,
-			sc[3][1] = bottom;
+			// Get top and right coords
+			if (i < x_slices) {
+				var tr_coord_front = [
+					((tr_counter + 1) * p_x) + left,
+					top
+				]
+				var tr_coord_back = [
+					(tr_counter * p_x) + left,
+					top
+				]
+			} else if (i >= x_slices) {
+				//alert(rem_tr)
+				//alert(tr_push)
+				var tr_coord_front = [
+					right,
+					tr_push + top + ((tr_counter + 1) * p_y)
+				] 
+				var tr_coord_back = [
+					right, 
+					tr_push + top + (tr_counter * p_y)
+				]
+				//return false
 			}
-		
-			if (y < xdiv) {
-			sc[1][0] = right - (z * p_x);
-			sc[1][1] = top;
-			sc[2][0] = sc[1][0] + p_x;
-			sc[2][1] = top;
-			} else {
-			sc[1][0] = left;
-			sc[1][1] = (tr_push + top + (w * p_y));
-			sc[2][0] = left;
-			sc[2][1] = sc[1][1] - p_y;
-			}
-		
-		} else if (a > 0 && a < 90) {
-		
-			if (y < ydiv) {
-			sc[0][0] = left;
-			sc[0][1] = (z * p_y) + top;
-			sc[3][0] = left; 
-			sc[3][1] = sc[0][1] - p_y;
-			} else {
-			sc[0][0] = (bl_push + left + (x * p_x)); 
-			sc[0][1] = bottom;
-			sc[3][0] = sc[0][0] - p_x;
-			sc[3][1] = bottom;
-			}
-	
-			if (y < xdiv) {
-			sc[1][0] = (z * p_x) + left;
-			sc[1][1] = top;
-			sc[2][0] = sc[1][0] - p_x;
-			sc[2][1] = top;
-			} else {
-			sc[1][0] = right;
-			sc[1][1] = (tr_push + top + (w * p_y));
-			sc[2][0] = right;
-			sc[2][1] = sc[1][1] - p_y;
-			}
-		
-		} else if (a == 0 || a == 180) {
-		
-			sc[0] = [right, (z * p_y) + top];
-			sc[1] = [left, (z * p_y) + top];
-			sc[2] = [left, (y * p_y) + top];
-			sc[3] = [right, (y * p_y) + top];
-		
-		} else if (a == 90) {
-		
-			sc[0] = [(z * p_x) + left, top];
-			sc[1] = [(z * p_x) + left, bottom];
-			sc[2] = [(y * p_x) + left, bottom];
-			sc[3] = [(y * p_x) + left, top]; 
-		}
-	return sc;
+			
+			var sc = [lb_coord_front, lb_coord_back, tr_coord_back, tr_coord_front]
+			return sc
+	}
 }
