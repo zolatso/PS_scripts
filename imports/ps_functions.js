@@ -36,19 +36,6 @@ function flipHor() {
 
 }
 
-function random_image() {
-	var idplay = stringIDToTypeID( "play" );
-    var desc52 = new ActionDescriptor();
-    var idnull = stringIDToTypeID( "null" );
-    var ref8 = new ActionReference();
-    var idaction = stringIDToTypeID( "action" );
-    ref8.putName( idaction, "random_image" );
-    var idactionSet = stringIDToTypeID( "actionSet" );
-    ref8.putName( idactionSet, "Tom's Actions" );
-    desc52.putReference( idnull, ref8 );
-	executeAction( idplay, desc52, DialogModes.NO );
-}
-
 function applySelectionAsLayerMask() {
 
 	var idmake = stringIDToTypeID( "make" );

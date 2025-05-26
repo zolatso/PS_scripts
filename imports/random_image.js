@@ -3,10 +3,6 @@
 //@include '~/Pictures/scripts/imports/resize_doc.js'
 
 
-var resize_to = 1
-var resize_mode = 3
-var folder = 'drawings/clips_converted'
-
 function get_resize_dims(resize_to) {
     var doc = app.activeDocument
     var resize_dims = []
@@ -19,7 +15,7 @@ function get_resize_dims(resize_to) {
     return resize_dims
 }
 
-function main(resize_to, resize_mode, folder) {
+function random_image(resize_to, resize_mode, folder) {
     var doc = app.activeDocument
     var resize_dims = get_resize_dims(resize_to)
     var paste_location = get_sc(
@@ -73,5 +69,3 @@ function main(resize_to, resize_mode, folder) {
     doc.selection.deselect()
     create_channel.remove()
 }
-
-main(resize_to, resize_mode, folder)

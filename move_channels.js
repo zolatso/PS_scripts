@@ -25,7 +25,7 @@ function create_rgb_layers() {
         if (i > 0) { doc.artLayers.add() }
         doc.activeLayer.blendMode = BlendMode.LIGHTEN
         doc.selection.load(doc.channels[i])
-        doc.selection.fill(colour_rgb(
+        doc.selection.fill(color_rgb(
             i == 0 ? 255 : 0,
             i == 1 ? 255 : 0,
             i == 2 ? 255 : 0
@@ -39,7 +39,7 @@ function black_background() {
     var doc = app.activeDocument
     var black_layer = doc.artLayers.add()
     doc.selection.selectAll()
-    doc.selection.fill(colour_rgb(0, 0, 0))
+    doc.selection.fill(color_rgb(0, 0, 0))
     black_layer.move(doc.artLayers[3], ElementPlacement.PLACEAFTER)
     doc.selection.deselect()
 }

@@ -1,23 +1,7 @@
 //@include '~/Pictures/scripts/imports/functions.js'
-//@include '~/Pictures/scripts/imports/ps_functions.js'
 //@include '~/Pictures/scripts/imports/random_HSB.js'
 
-function fill_the_thread(i, hue, total_slices) {
-	var doc = app.activeDocument
-	var vary = 20
-    hue = hue - (vary / 2) + random(vary)
-	doc.selection.fill(random_HSB(
-		hue, 
-		wave_gen(total_slices / 2, i, 30, 80), 
-		wave_gen(total_slices / 5, i, 50, 100),
-		0,
-		0,
-		0
-	))
-	return hue
-}
-
-function threads(angle, thickness, spacing, color, h_vary, s_vary, b_vary) {
+function threads(angle, thickness, spacing, colors, h_vary, s_vary, b_vary) {
     var doc = app.activeDocument
 
     var left = doc.selection.bounds[0]
@@ -34,8 +18,9 @@ function threads(angle, thickness, spacing, color, h_vary, s_vary, b_vary) {
     var push_x = int_vars[0] 
     var push_y = int_vars[1] 
     var slice_quantity = int_vars[2]
+
+	var color_counter = 1
 	var gap_counter = 0
-	var action_counter = 0
     for (i = 0; i < slice_quantity; i++) {
 		if (gap_counter == 0) {
 			var sc = select_coordinates(
@@ -57,24 +42,23 @@ function threads(angle, thickness, spacing, color, h_vary, s_vary, b_vary) {
 			} else {
 				break;
 			}
-			var init_hue = hue ? hue : color.hsb.hue
-			var hue = fill_the_thread(action_counter, init_hue, slice_quantity)
-			// doc.selection.fill(random_HSB(
-			// 	color.hsb.hue,
-			// 	color.hsb.saturation,
-			// 	color.hsb.brightness,
-			// 	0,
-			// 	0,
-			// 	0
-			// ))
-			action_counter++
+			doc.selection.fill(
+				random_HSB(
+					colors[color_counter - 1].hsb.hue,
+					colors[color_counter - 1].hsb.saturation,
+					colors[color_counter - 1].hsb.brightness,
+					h_vary,
+					s_vary,
+					b_vary,
+				)
+			)
+		// This goes inside the 'if' as color counter should only increase
+		// on a line where there has been a fill
+		color_counter = color_counter < colors.length ? color_counter+=1 : 1
 		}
 	gap_counter = gap_counter < spacing ? gap_counter+=1 : 0 
     }
 	trim_edges(create_channel)
-	if (angle > 90) {
-		flipHor()
-	}
 }
 
 function trim_edges(channel) {

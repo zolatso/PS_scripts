@@ -1,3 +1,23 @@
+function wave_gen(len, pos, min, max) {
+	
+	var loop = (2 * len) - 2;
+	
+	var cf = pos > 0 ? Math.ceil(pos / loop) - 1 : Math.ceil(pos / loop);
+	cf = pos - (cf * loop);
+	
+// 	Check for reverse loop
+	if (cf > len - 1) { 
+		var chaffer = cf - (len - 1);
+		cf = len - 1 - chaffer; 
+	}
+	
+	var range = max - min;
+	var amp = range / (len - 1);
+
+	return min + (cf * amp);
+
+}
+
 function get_sc(l, t, r, b) {
     l = Math.round(l)
     t = Math.round(t)
@@ -24,7 +44,7 @@ function randomly_vary_color_balance(x, copy) {
     )
 }
 
-function colour_rgb(r, g, b) {
+function color_rgb(r, g, b) {
     colour = new SolidColor
     colour.rgb.red = r
     colour.rgb.green = g
