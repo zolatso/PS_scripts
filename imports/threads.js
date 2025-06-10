@@ -2,19 +2,19 @@
 //@include '~/Pictures/scripts/imports/ps_functions.js'
 //@include '~/Pictures/scripts/imports/random_HSB.js'
 
-function fill_the_thread(i, hue, total_slices) {
+function fill_the_thread(i, hue, sat, bri, total_slices) {
 	var doc = app.activeDocument
 	var vary = 20
-    hue = hue - (vary / 2) + random(vary)
+    bri = bri - (vary / 2) + random(vary)
 	doc.selection.fill(random_HSB(
 		hue, 
-		wave_gen(total_slices / 2, i, 30, 80), 
-		wave_gen(total_slices / 5, i, 50, 100),
+		sat, 
+		bri,
 		0,
 		0,
 		0
 	))
-	return hue
+	return [hue, sat, bri]
 }
 
 function threads(angle, thickness, spacing, color, h_vary, s_vary, b_vary) {
@@ -58,7 +58,11 @@ function threads(angle, thickness, spacing, color, h_vary, s_vary, b_vary) {
 				break;
 			}
 			var init_hue = hue ? hue : color.hsb.hue
-			var hue = fill_the_thread(action_counter, init_hue, slice_quantity)
+			var init_sat = color.hsb.saturation
+			var init_bri = bri ? bri : color.hsb.brightness
+			var hue = fill_the_thread(action_counter, init_hue, init_sat, init_bri, slice_quantity)[0]
+			var sat = fill_the_thread(action_counter, init_hue, init_sat, init_bri, slice_quantity)[1]
+			var bri = fill_the_thread(action_counter, init_hue, init_sat, init_bri, slice_quantity)[2]
 			// doc.selection.fill(random_HSB(
 			// 	color.hsb.hue,
 			// 	color.hsb.saturation,

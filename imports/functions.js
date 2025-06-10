@@ -32,7 +32,6 @@ function randomly_vary_color_balance(x, copy) {
         doc.selection.copy(true)
         doc.paste()
     }
-    var x = 50
     var rv = (0 - (x / 2)) + (Math.random() * x)
     var gv = (0 - (x / 2)) + (Math.random() * x)
     var bv = (0 - (x / 2)) + (Math.random() * x)

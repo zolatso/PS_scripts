@@ -1,7 +1,7 @@
 //@include '~/Pictures/scripts/imports/functions.js'
 //@include '~/Pictures/scripts/imports/random_HSB.js'
 
-function threads(angle, thickness, spacing, colors, h_vary, s_vary, b_vary) {
+function mc_threads(angle, thickness, spacing, colors, h_vary, s_vary, b_vary) {
     var doc = app.activeDocument
 
     var left = doc.selection.bounds[0]
@@ -59,6 +59,9 @@ function threads(angle, thickness, spacing, colors, h_vary, s_vary, b_vary) {
 	gap_counter = gap_counter < spacing ? gap_counter+=1 : 0 
     }
 	trim_edges(create_channel)
+	if (angle > 90) {
+		flipHor()
+	}
 }
 
 function trim_edges(channel) {
