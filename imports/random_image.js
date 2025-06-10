@@ -15,8 +15,12 @@ function get_resize_dims(resize_to) {
     return resize_dims
 }
 
-function random_image(resize_to, resize_mode, folder) {
+function random_image(resize_to, resize_mode, zoom, folder) {
     var doc = app.activeDocument
+    // If the zoom feature is activated, we always resize to original document size
+    resize_to = zoom ? 0 : resize_to
+    // Also if the zoom feature is activated, resize_mode is always just getting it to fit
+    resize_mode = zoom ? 3 : resize_mode
     var resize_dims = get_resize_dims(resize_to)
     var paste_location = get_sc(
         doc.selection.bounds[0],
@@ -27,7 +31,8 @@ function random_image(resize_to, resize_mode, folder) {
     var create_channel = store_selection_as_channel()
     var file_list = get_files_in_folder(folder)
 
-    // Create new document
+    // Create new document. Not really sure why we do this but can't
+    // be bothered to change it right now
     app.documents.add(resize_dims[0], resize_dims[1])
     var dal = app.activeDocument.artLayers
     dal[dal.length-1].isBackgroundLayer = false
@@ -42,6 +47,23 @@ function random_image(resize_to, resize_mode, folder) {
     dal = doc.artLayers
     doc.flatten()
     dal[0].isBackgroundLayer = false
+    // If zoom mode is activated, you first need to crop a tiny bit of the image
+    if (zoom) {
+        // Define the size of a small box
+        var small_box = [
+            resize_dims[0] / 10,
+            resize_dims[1] / 10,
+        ]
+        // Randomly generate a left and top point
+        var left = random(resize_dims[0] - small_box[0])
+        var top = random(resize_dims[1] - small_box[1])
+        // Crop to randomly generated point
+        doc.crop([
+            left, 
+            top, 
+            left + small_box[0], 
+            top + small_box[1]])
+    }
     resize_doc(resize_dims[0], resize_dims[1], resize_mode)
     // ADD A WAVE EFFECT HERE
     // Copy the reized image, close the file, and paste in the canvas image created previously
