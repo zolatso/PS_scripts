@@ -1,4 +1,26 @@
-function wave_gen(len, pos, min, max) {
+function wave_gen(cycle, position, range, wave_type) {
+    // wave_type is SINE == 0 SAW == 1
+    // Defensive conditions
+    if (cycle <= 0 || position < 0) {
+        return false
+    }
+    var cycle_position = position % cycle
+    // Normalize the position to a range of 0 to 1
+    // If length is 1, position is always 0, so normalized_position remains 0
+    var normalized_position = cycle_position / (cycle - 1)
+    // Calculate the sine wave value (half cycle from 0 to pi)
+    // This will go from 0 up to 1 and back down to 0
+    if (wave_type == 0) {
+        var sine_value = Math.sin(normalized_position * Math.PI)
+        // Scale the sine_value by the amplitude_range and add the minimum_value
+        var calculated_value = sine_value * range
+    } else if (wave_type == 1) {
+        var calculated_value = normalized_position * range
+    }
+    return Math.round(calculated_value)
+}
+
+function wave_gen_old(len, pos, min, max) {
 	
 	var loop = (2 * len) - 2;
 	

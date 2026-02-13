@@ -1,9 +1,9 @@
 //@include '~/Pictures/scripts/imports/functions.js'
-//@include '~/Pictures/scripts/imports/presets.js'
+//@include '~/Pictures/scripts/imports/mc_threads.js'
 //@include '~/Pictures/scripts/imports/ps_functions.js'
 //@include '~/Pictures/scripts/imports/random_HSB.js'
 
-var columns = 5    
+var columns = 8    
 var rows = 5
 
 function color_array_for_loop() {
@@ -20,25 +20,34 @@ function color_array_for_loop() {
     return cols
 }
 
-function do_something(counter_main, counter_row, colors) {
+function do_something(counter_row, counter_col, colors) {
     var doc = app.activeDocument
+    var total_counter = counter_col + (counter_row * columns)
     var colors = [
-        color_hsb(12, 100, 97),
-        color_hsb(40, 100, 100),
-        color_hsb(0, 100, 26),
-        color_hsb(0, 100, 59)
+        color_hsb(
+            0 + wave_gen(8, counter_col, 180, 0), 
+            100, 
+            97),
+        color_hsb(
+            0,
+            0 + wave_gen(40, total_counter, 50, 0),
+            50 + 0 + wave_gen(40, total_counter, 50, 0))
     ]
     doc.artLayers.add()
     mc_threads(
-        wave_gen(4, counter_row, 0, 90),
-        50,
+        wave_gen(8, counter_col, 180, 1),
+        100,
         0,
         colors,
-        0,0,0
+        [0,0,0]
     )
-    if (counter_main > 0) {
+    if (total_counter > 0) {
         doc.activeLayer.merge()
     }
+    // if(counter_col == columns - 1) {
+    //     alert(wave_gen(8, counter_col, 0, 180, 1))
+    // }
+
 }
 
 function grid(columns, rows) {

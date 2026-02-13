@@ -47,6 +47,7 @@ function random_image(resize_to, resize_mode, zoom, folder) {
     dal = doc.artLayers
     doc.flatten()
     dal[0].isBackgroundLayer = false
+
     // If zoom mode is activated, you first need to crop a tiny bit of the image
     if (zoom) {
         // Define the size of a small box
@@ -55,8 +56,8 @@ function random_image(resize_to, resize_mode, zoom, folder) {
             resize_dims[1] / 10,
         ]
         // Randomly generate a left and top point
-        var left = random(resize_dims[0] - small_box[0])
-        var top = random(resize_dims[1] - small_box[1])
+        var left = random(doc.width - small_box[0])
+        var top = random(doc.height - small_box[1])
         // Crop to randomly generated point
         doc.crop([
             left, 

@@ -1,7 +1,7 @@
 //@include '~/Pictures/scripts/imports/functions.js'
 //@include '~/Pictures/scripts/imports/random_HSB.js'
 
-function mc_threads(angle, thickness, spacing, colors, h_vary, s_vary, b_vary) {
+function mc_threads(angle, thickness, spacing, colors, random_vary) {
     var doc = app.activeDocument
 
     var left = doc.selection.bounds[0]
@@ -12,13 +12,14 @@ function mc_threads(angle, thickness, spacing, colors, h_vary, s_vary, b_vary) {
     var height = bottom - top
     var create_channel = store_selection_as_channel()
 
+
+
     // Ensure the angle is within 180
     angle = angle > 180 ? angle - 180 : angle
     var int_vars = int_var(angle, thickness, width, height)
     var push_x = int_vars[0] 
     var push_y = int_vars[1] 
     var slice_quantity = int_vars[2]
-
 	var color_counter = 1
 	var gap_counter = 0
     for (i = 0; i < slice_quantity; i++) {
@@ -47,9 +48,9 @@ function mc_threads(angle, thickness, spacing, colors, h_vary, s_vary, b_vary) {
 					colors[color_counter - 1].hsb.hue,
 					colors[color_counter - 1].hsb.saturation,
 					colors[color_counter - 1].hsb.brightness,
-					h_vary,
-					s_vary,
-					b_vary,
+					random_vary[0],
+					random_vary[1],
+					random_vary[2],
 				)
 			)
 		// This goes inside the 'if' as color counter should only increase
@@ -59,7 +60,7 @@ function mc_threads(angle, thickness, spacing, colors, h_vary, s_vary, b_vary) {
 	gap_counter = gap_counter < spacing ? gap_counter+=1 : 0 
     }
 	trim_edges(create_channel)
-	if (angle > 90) {
+	if (angle > 90 && angle < 180) {
 		flipHor()
 	}
 }
@@ -114,6 +115,7 @@ function deg_to_r(x) {
 function select_coordinates(i, a, width, height, left, right, top, bottom, p_x, p_y) {
 	switch (a) {
 		case 0:
+		case 180:
 			var sc = get_sc(
 				left, 
 				(i * p_y) + top, 

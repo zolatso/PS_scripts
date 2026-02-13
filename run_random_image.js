@@ -4,4 +4,4 @@ var resize_to = 1
 var resize_mode = 1
 var folder = 'iphone'
 
-random_image(resize_to, resize_mode, folder)
+random_image(resize_to, resize_mode, true, folder)
