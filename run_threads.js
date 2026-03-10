@@ -1,6 +1,7 @@
-//@include '~/Pictures/scripts/imports/threads.js'
-//@include '~/Pictures/scripts/imports/functions.js'
-//@include '~/Pictures/scripts/imports/mc_threads.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/imports/threads.js'));
+$.evalFile(File(thisFolder + '/imports/functions.js'));
+$.evalFile(File(thisFolder + '/imports/mc_threads.js'));
 
 mc_threads(
     45,

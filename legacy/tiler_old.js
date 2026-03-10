@@ -1,4 +1,5 @@
-//@include '~/Google Drive/PS Scripts/functions.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/functions.js'));
 
 var doc = app.activeDocument
 

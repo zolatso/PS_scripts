@@ -1,6 +1,7 @@
-//@include '~/Pictures/scripts/imports/functions.js'
-//@include '~/Pictures/scripts/imports/ps_functions.js'
-//@include '~/Pictures/scripts/imports/random_HSB.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/functions.js'));
+$.evalFile(File(thisFolder + '/ps_functions.js'));
+$.evalFile(File(thisFolder + '/random_HSB.js'));
 
 function fill_the_thread(i, hue, sat, bri, total_slices) {
 	var doc = app.activeDocument

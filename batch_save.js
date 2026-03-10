@@ -1,4 +1,5 @@
-//@include '~/Pictures/scripts/functions.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/imports/functions.js'));
 
 var folder = 'drawings/clips_converted'
 

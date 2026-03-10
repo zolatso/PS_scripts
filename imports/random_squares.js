@@ -1,5 +1,6 @@
-//@include '~/Pictures/scripts/imports/functions.js'
-//@include '~/Pictures/scripts/imports/ps_functions.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/functions.js'));
+$.evalFile(File(thisFolder + '/ps_functions.js'));
 
 function fill_random_square(i) {
     var doc = app.activeDocument

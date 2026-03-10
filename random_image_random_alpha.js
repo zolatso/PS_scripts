@@ -1,6 +1,7 @@
-//@include '~/Pictures/scripts/imports/functions.js'
-//@include '~/Pictures/scripts/imports/ps_functions.js'
-//@include '~/Pictures/scripts/imports/resize_doc.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/imports/functions.js'));
+$.evalFile(File(thisFolder + '/imports/ps_functions.js'));
+$.evalFile(File(thisFolder + '/imports/resize_doc.js'));
 
 var resize_to = 1
 var resize_mode = 2

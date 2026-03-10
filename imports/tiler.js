@@ -1,5 +1,6 @@
-//@include '~/Pictures/scripts/imports/functions.js'
-//@include '~/Pictures/scripts/imports/resize_doc.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/functions.js'));
+$.evalFile(File(thisFolder + '/resize_doc.js'));
 
 function tiler(random_file, folder, specific_file, scale, offset) {
     var doc = app.activeDocument

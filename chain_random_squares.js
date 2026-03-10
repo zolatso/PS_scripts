@@ -1,5 +1,6 @@
-//@include '~/Pictures/scripts/imports/random_squares.js'
-//@include '~/Pictures/scripts/imports/functions.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/imports/random_squares.js'));
+$.evalFile(File(thisFolder + '/imports/functions.js'));
 
 var doc = app.activeDocument
 

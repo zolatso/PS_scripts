@@ -1,4 +1,5 @@
-//@include '~/Google Drive/PS Scripts/functions.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/functions.js'));
 // Needs 6 variables: angle of lattice, thickness of lines,
 // 3 x colour randomness extent variables for LAB axes
 // and a hatch density number (1 = no gaps, then increases)

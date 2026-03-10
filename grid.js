@@ -1,7 +1,8 @@
-//@include '~/Pictures/scripts/imports/functions.js'
-//@include '~/Pictures/scripts/imports/mc_threads.js'
-//@include '~/Pictures/scripts/imports/ps_functions.js'
-//@include '~/Pictures/scripts/imports/random_HSB.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/imports/functions.js'));
+$.evalFile(File(thisFolder + '/imports/mc_threads.js'));
+$.evalFile(File(thisFolder + '/imports/ps_functions.js'));
+$.evalFile(File(thisFolder + '/imports/random_HSB.js'));
 
 var columns = 8    
 var rows = 5

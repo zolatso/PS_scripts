@@ -1,4 +1,5 @@
-//@include '~/Pictures/scripts/imports/functions.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/functions.js'));
 
 function displace(total, blur) {
     var doc = app.activeDocument

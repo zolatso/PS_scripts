@@ -1,4 +1,5 @@
-//@include '~/Pictures/scripts/imports/random_image.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/imports/random_image.js'));
 
 var resize_to = 1
 var resize_mode = 1

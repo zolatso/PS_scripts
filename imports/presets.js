@@ -1,5 +1,6 @@
-//@include '~/Pictures/scripts/imports/mc_threads.js'
-//@include '~/Pictures/scripts/imports/threads.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/mc_threads.js'));
+$.evalFile(File(thisFolder + '/threads.js'));
 
 function apply_wave() {
     var doc = app.activeDocument

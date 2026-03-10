@@ -1,6 +1,7 @@
-//@include '~/Pictures/scripts/imports/functions.js'
-//@include '~/Pictures/scripts/imports/ps_functions.js'
-//@include '~/Pictures/scripts/imports/resize_doc.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/functions.js'));
+$.evalFile(File(thisFolder + '/ps_functions.js'));
+$.evalFile(File(thisFolder + '/resize_doc.js'));
 
 
 function get_resize_dims(resize_to) {

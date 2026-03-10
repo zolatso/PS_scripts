@@ -1,4 +1,5 @@
-//@include '~/Pictures/scripts/imports/tiler.js'
+var thisFolder = File($.fileName).parent;
+$.evalFile(File(thisFolder + '/imports/tiler.js'));
 
 var random_file = 1
 var folder = "~/Pictures/md/diagrams"
