@@ -3,9 +3,12 @@ $.evalFile(File(thisFolder + '/imports/functions.js'));
 $.evalFile(File(thisFolder + '/imports/ps_functions.js'));
 $.evalFile(File(thisFolder + '/imports/resize_doc.js'));
 
-var resize_to = 1
+// resize_to 0 = resize to document
+// resize_to 1 = resize to selection
+// irrelevant if selection == document size
+var resize_to = 0
 var resize_mode = 2
-var folder_a = 'iphone'
+var folder_a = 'md/galleries'
 var folder_b = 'iphone'
 
 function get_resize_dims(resize_to) {
@@ -42,34 +45,7 @@ function effects(){
     dal[0].merge()
 }
 
-function main(resize_to, resize_mode, folder_a, folder_b) {
-    var doc = app.activeDocument
-    var resize_dims = get_resize_dims(resize_to)
-    var paste_location = get_sc(
-        doc.selection.bounds[0],
-        doc.selection.bounds[1],
-        doc.selection.bounds[2],
-        doc.selection.bounds[3],
-    )
-    var create_channel = store_selection_as_channel()
-    var file_list_a = get_files_in_folder(folder_a)
-    var file_list_b = get_files_in_folder(folder_b)
-
-    assemble_image_in_separate_document(resize_dims, resize_mode, file_list_a, file_list_b)
-    
-    // Location of pasting in original document uses a selection based on the original selection
-    doc = app.activeDocument
-    dal = doc.artLayers
-    doc.selection.select(paste_location)
-    doc.paste()
-    // Apply the channel we created at the start of the script
-    doc.selection.load(create_channel)
-    applySelectionAsLayerMask()
-    doc.selection.deselect()
-    create_channel.remove()
-}
-
-function assemble_image_in_separate_document(resize_dims, resize_mode, file_list_a, file_list_b) {
+function assemble_image_in_separate_document(resize_dims, resize_mode, selected_image, selected_alpha) {
     // Create new document
     app.documents.add(resize_dims[0], resize_dims[1])
     var doc = app.activeDocument
@@ -78,10 +54,8 @@ function assemble_image_in_separate_document(resize_dims, resize_mode, file_list
 
     for (i = 0; i <2; i++) {
         // Open randomly chosen image
-        var selected_file = i % 2 == 0 ? file_list_a[random(file_list_a.length)] : file_list_b[random(file_list_b.length)]
+        var selected_file = i % 2 == 0 ? selected_image : selected_alpha
         open(selected_file)
-        // Log which file was chosen for reference
-        createLog(selected_file)
         // Flatten and resize the image
         doc = app.activeDocument
         dal = doc.artLayers
@@ -115,6 +89,73 @@ function assemble_image_in_separate_document(resize_dims, resize_mode, file_list
     doc.selection.selectAll()
     doc.selection.copy()
     doc.close(SaveOptions.DONOTSAVECHANGES)
+}
+
+function get_or_create_log(doc) {
+    var docPath = doc.fullName.parent
+    var docName = doc.name.replace(/\.[^\.]+$/, '')
+    var logFile = new File(docPath + '/' + docName + '.json')
+    if (!logFile.exists) {
+        logFile.open('w')
+        logFile.write('[]')
+        logFile.close()
+    }
+    return logFile
+}
+
+function append_to_log(log_file, selected_image, selected_alpha) {
+    log_file.open('r')
+    var content = log_file.read()
+    log_file.close()
+
+    var entries = eval('(' + content + ')')
+    var d = new Date()
+    var timestamp = d.getFullYear() + '-'
+        + pad(d.getMonth() + 1) + '-'
+        + pad(d.getDate()) + 'T'
+        + pad(d.getHours()) + ':'
+        + pad(d.getMinutes()) + ':'
+        + pad(d.getSeconds())
+    entries.push({
+        timestamp: timestamp,
+        image: selected_image.name,
+        alpha: selected_alpha.name
+    })
+
+    log_file.open('w')
+    log_file.write(JSON.stringify(entries, null, 2))
+    log_file.close()
+}
+
+function pad(n) { return n < 10 ? '0' + n : '' + n }
+
+function main(resize_to, resize_mode, folder_a, folder_b) {
+    var doc = app.activeDocument
+    var resize_dims = get_resize_dims(resize_to)
+    var paste_location = get_sc(
+        doc.selection.bounds[0],
+        doc.selection.bounds[1],
+        doc.selection.bounds[2],
+        doc.selection.bounds[3],
+    )
+    var create_channel = store_selection_as_channel()
+    var selected_image = get_random_file_from_folder(folder_a)
+    var selected_alpha = get_random_file_from_folder(folder_b)
+    var log_file = get_or_create_log(doc)
+    append_to_log(log_file, selected_image, selected_alpha)
+
+    assemble_image_in_separate_document(resize_dims, resize_mode, selected_image, selected_alpha)
+    
+    // Location of pasting in original document uses a selection based on the original selection
+    doc = app.activeDocument
+    dal = doc.artLayers
+    doc.selection.select(paste_location)
+    doc.paste()
+    // Apply the channel we created at the start of the script
+    doc.selection.load(create_channel)
+    applySelectionAsLayerMask()
+    doc.selection.deselect()
+    create_channel.remove()
 }
 
 main(resize_to, resize_mode, folder_a, folder_b)

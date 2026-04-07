@@ -1,5 +1,10 @@
 var thisFolder = File($.fileName).parent;
-$.evalFile(File(thisFolder + '/functions.js'));
+$.evalFile(File(thisFolder + '/imports/functions.js'));
+
+displace(
+    50,
+    50
+)
 
 function displace(total, blur) {
     var doc = app.activeDocument
@@ -34,7 +39,7 @@ function create_alpha(width, height, blur) {
     doc.activeLayer.applyGaussianBlur(blur)
     doc.changeMode(ChangeMode.GRAYSCALE)
     doc.flatten()
-    var alpha = File("~/Pictures/Alphas/alpha-bg-"+random(100000)+".psd")
+    var alpha = File("/Volumes/Intenso/Pictures/Alphas/alpha-bg-"+random(100000)+".psd")
     doc.saveAs(alpha)
     doc.close()
     return alpha

@@ -2,6 +2,9 @@ var thisFolder = File($.fileName).parent;
 $.evalFile(File(thisFolder + '/functions.js'));
 $.evalFile(File(thisFolder + '/resize_doc.js'));
 
+// This has been refactored but the main function doesn't take advantage of the 
+// get_files_from_folder function in functions.js, which saves us from redefining the root directory
+
 function tiler(random_file, folder, specific_file, scale, offset) {
     var doc = app.activeDocument
     var bounds = doc.selection.bounds
@@ -12,8 +15,9 @@ function tiler(random_file, folder, specific_file, scale, offset) {
         var channel = store_selection_as_channel()
     }
     // Figure out which file to open, send it to the first function
-    var fileList = Folder(folder).getFiles(new RegExp(/\.(jpg|tif|psd|png|heic)$/i))
-    var fileToOpen = random_file == 1 ? fileList[random(fileList.length)] : File(specific_file)
+    var fileList = get_files_in_folder(folder)
+    alert(fileList)
+    var fileToOpen = random_file == true ? fileList[random(fileList.length)] : File(specific_file)
     var resize_scale = [doc.width * (scale / 100), doc.height * (scale / 100)] 
     pattern_xy = get_initial_pattern(fileToOpen, resize_scale)
 
@@ -107,7 +111,7 @@ function fill_in_other_rows(width, height, offset) {
         }
         doc.paste()
         // Apply offset effect if requested
-        if (i % 2 != 0 && offset == 1) {
+        if (i % 2 != 0 && offset == true) {
             doc.artLayers[0].applyOffset(width / 2, 0, OffsetUndefinedAreas.WRAPAROUND)
         }
         if (i > 0) {

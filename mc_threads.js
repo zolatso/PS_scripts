@@ -1,6 +1,17 @@
 var thisFolder = File($.fileName).parent;
-$.evalFile(File(thisFolder + '/functions.js'));
-$.evalFile(File(thisFolder + '/random_HSB.js'));
+$.evalFile(File(thisFolder + '/imports/functions.js'));
+$.evalFile(File(thisFolder + '/imports/ps_functions.js'));
+$.evalFile(File(thisFolder + '/imports/random_HSB.js'));
+
+mc_threads(
+    135,
+    10,
+    3,
+    [
+        color_hsb(21, 58, 99),
+    ],
+    [0,0,0]
+)
 
 function mc_threads(angle, thickness, spacing, colors, random_vary) {
     var doc = app.activeDocument

@@ -1,4 +1,6 @@
 // This has not been refactored
+// The photoshop action that launches this should initially group the selected layers and then 
+// at the end process them as one - this is a bit of a hack as ideally it would all be handled in here
 
 var doc = app.activeDocument
 var dal = doc.layers

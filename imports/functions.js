@@ -82,10 +82,18 @@ function color_hsb(h, s, b) {
 }
 
 function get_files_in_folder(folder) {
-    var fileTypes = new RegExp(/\.(jpg|tif|psd|png|heic|jpeg)$/i)
-    var root = "~/Pictures/"
+    var fileTypes = new RegExp(/(^|\/)(?!\._)[^\/]+\.(?:jpe?g|png|psd|heic)$/i)
+    var root = "/Volumes/Intenso/Pictures/"
     var fileLoc = Folder(root + folder)
     return fileLoc.getFiles(fileTypes)
+}
+
+function get_random_file_from_folder(folder) {
+    var fileTypes = new RegExp(/(^|\/)(?!\._)[^\/]+\.(?:jpe?g|png|psd|heic)$/i)
+    var root = "/Volumes/Intenso/Pictures/"
+    var fileLoc = Folder(root + folder)
+    var files = fileLoc.getFiles(fileTypes)
+    return files[random(files.length)]
 }
 
 function store_selection_as_channel() {
@@ -107,7 +115,7 @@ function createLog(chuffy) {
 	var splitAddress = captain.split("/")
 	var getName = splitAddress[splitAddress.length-1]
 	app.documents.add(1,1)
-	var folder = "~/Pictures/logs/"
+	var folder = "/Volumes/Intenso/Pictures/logs/"
 	var fName = folder + getName + ".psd";
 	var file = new File(fName);
 	var doc = app.activeDocument
