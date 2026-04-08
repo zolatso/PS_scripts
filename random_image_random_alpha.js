@@ -6,10 +6,15 @@ $.evalFile(File(thisFolder + '/imports/resize_doc.js'));
 // resize_to 0 = resize to document
 // resize_to 1 = resize to selection
 // irrelevant if selection == document size
-var resize_to = 0
+var resize_to = 1
 var resize_mode = 2
+// 0 = Choose a random image from the specified folders
+// 1 = Choose the specific image given in variables below from the specified folders
+var selection_mode = 0
 var folder_a = 'md/galleries'
 var folder_b = 'iphone'
+var file_a = 'IMG_0065.JPG'
+var file_b = 'IMG_2704.JPG'
 
 function get_resize_dims(resize_to) {
     var doc = app.activeDocument
@@ -103,12 +108,12 @@ function get_or_create_log(doc) {
     return logFile
 }
 
-function append_to_log(log_file, selected_image, selected_alpha) {
+function append_to_log(log_file, selected_image, selected_alpha, folder_a, folder_b) {
     log_file.open('r')
     var content = log_file.read()
     log_file.close()
 
-    var entries = eval('(' + content + ')')
+    var entries = (content && content.length > 0) ? eval('(' + content + ')') : []
     var d = new Date()
     var timestamp = d.getFullYear() + '-'
         + pad(d.getMonth() + 1) + '-'
@@ -118,12 +123,13 @@ function append_to_log(log_file, selected_image, selected_alpha) {
         + pad(d.getSeconds())
     entries.push({
         timestamp: timestamp,
+        folder_a: folder_a,
+        folder_b: folder_b,
         image: selected_image.name,
         alpha: selected_alpha.name
     })
-
     log_file.open('w')
-    log_file.write(JSON.stringify(entries, null, 2))
+    log_file.write(stringify_log(entries))
     log_file.close()
 }
 
@@ -139,10 +145,10 @@ function main(resize_to, resize_mode, folder_a, folder_b) {
         doc.selection.bounds[3],
     )
     var create_channel = store_selection_as_channel()
-    var selected_image = get_random_file_from_folder(folder_a)
-    var selected_alpha = get_random_file_from_folder(folder_b)
+    var selected_image = selection_mode == 1 ? get_file_from_folder(folder_a, file_a) : get_random_file_from_folder(folder_a)
+    var selected_alpha = selection_mode == 1 ? get_file_from_folder(folder_b, file_b) : get_random_file_from_folder(folder_b)
     var log_file = get_or_create_log(doc)
-    append_to_log(log_file, selected_image, selected_alpha)
+    append_to_log(log_file, selected_image, selected_alpha, folder_a, folder_b)
 
     assemble_image_in_separate_document(resize_dims, resize_mode, selected_image, selected_alpha)
     

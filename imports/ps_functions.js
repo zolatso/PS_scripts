@@ -57,3 +57,43 @@ function applySelectionAsLayerMask() {
 	executeAction( idmake, desc195, DialogModes.NO );
 
 }
+
+function selectLayerOutline() {
+	var idset = stringIDToTypeID( "set" );
+    var desc77 = new ActionDescriptor();
+    var idnull = stringIDToTypeID( "null" );
+    var ref76 = new ActionReference();
+    var idchannel = stringIDToTypeID( "channel" );
+    var idselection = stringIDToTypeID( "selection" );
+    ref76.putProperty( idchannel, idselection );
+    desc77.putReference( idnull, ref76 );
+    var idto = stringIDToTypeID( "to" );
+    var ref77 = new ActionReference();
+    var idchannel = stringIDToTypeID( "channel" );
+    var idchannel = stringIDToTypeID( "channel" );
+    var idtransparencyEnum = stringIDToTypeID( "transparencyEnum" );
+    ref77.putEnumerated( idchannel, idchannel, idtransparencyEnum );
+    desc77.putReference( idto, ref77 );
+	executeAction( idset, desc77, DialogModes.NO );
+}
+
+function selectAdjOutline () {
+
+	var idset = stringIDToTypeID( "set" );
+    var desc114 = new ActionDescriptor();
+    var idnull = stringIDToTypeID( "null" );
+    var ref102 = new ActionReference();
+    var idchannel = stringIDToTypeID( "channel" );
+    var idselection = stringIDToTypeID( "selection" );
+    ref102.putProperty( idchannel, idselection );
+    desc114.putReference( idnull, ref102 );
+    var idto = stringIDToTypeID( "to" );
+    var ref103 = new ActionReference();
+    var idchannel = stringIDToTypeID( "channel" );
+    var idordinal = stringIDToTypeID( "ordinal" );
+    var idtargetEnum = stringIDToTypeID( "targetEnum" );
+    ref103.putEnumerated( idchannel, idordinal, idtargetEnum );
+    desc114.putReference( idto, ref103 );
+	executeAction( idset, desc114, DialogModes.NO );
+	
+}

@@ -88,6 +88,11 @@ function get_files_in_folder(folder) {
     return fileLoc.getFiles(fileTypes)
 }
 
+function get_file_from_folder(folder, filename) {
+    var root = "/Volumes/Intenso/Pictures/"
+    return File(root + folder + '/' + filename)
+}
+
 function get_random_file_from_folder(folder) {
     var fileTypes = new RegExp(/(^|\/)(?!\._)[^\/]+\.(?:jpe?g|png|psd|heic)$/i)
     var root = "/Volumes/Intenso/Pictures/"
@@ -108,6 +113,22 @@ function store_selection_as_channel() {
 
 function random(a) {
     return Math.round(Math.random() * a)
+}
+
+function stringify_entry(entry) {
+    var parts = []
+    for (var key in entry) {
+        parts.push('"' + key + '": "' + entry[key] + '"')
+    }
+    return '  {\n    ' + parts.join(',\n    ') + '\n  }'
+}
+
+function stringify_log(entries) {
+    var lines = []
+    for (var i = 0; i < entries.length; i++) {
+        lines.push(stringify_entry(entries[i]))
+    }
+    return '[\n' + lines.join(',\n') + '\n]'
 }
 
 function createLog(chuffy) {
