@@ -1,3 +1,6 @@
+cTID = function(s) { return app.charIDToTypeID(s); };
+sTID = function(s) { return app.stringIDToTypeID(s); };
+
 function flipVer() {
 	
     var idflip = stringIDToTypeID( "flip" );
@@ -97,3 +100,13 @@ function selectAdjOutline () {
 	executeAction( idset, desc114, DialogModes.NO );
 	
 }
+
+function pasteInPlace(enabled, withDialog) {
+    if (enabled != undefined && !enabled)
+      return;
+    var dialogMode = (withDialog ? DialogModes.ALL : DialogModes.NO);
+    var desc1 = new ActionDescriptor();
+    desc1.putBoolean(sTID("inPlace"), true);
+    desc1.putEnumerated(cTID('AntA'), cTID('Annt'), cTID('Anno'));
+    executeAction(cTID('past'), desc1, dialogMode);
+  };

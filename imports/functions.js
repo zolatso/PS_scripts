@@ -1,3 +1,6 @@
+// var root = "/Volumes/Intenso/Pictures/"
+var root = "~/Images/"
+
 function wave_gen(cycle, position, range, wave_type) {
     // wave_type is SINE == 0 SAW == 1
     // Defensive conditions
@@ -83,19 +86,16 @@ function color_hsb(h, s, b) {
 
 function get_files_in_folder(folder) {
     var fileTypes = new RegExp(/(^|\/)(?!\._)[^\/]+\.(?:jpe?g|png|psd|heic)$/i)
-    var root = "/Volumes/Intenso/Pictures/"
     var fileLoc = Folder(root + folder)
     return fileLoc.getFiles(fileTypes)
 }
 
 function get_file_from_folder(folder, filename) {
-    var root = "/Volumes/Intenso/Pictures/"
     return File(root + folder + '/' + filename)
 }
 
 function get_random_file_from_folder(folder) {
     var fileTypes = new RegExp(/(^|\/)(?!\._)[^\/]+\.(?:jpe?g|png|psd|heic)$/i)
-    var root = "/Volumes/Intenso/Pictures/"
     var fileLoc = Folder(root + folder)
     var files = fileLoc.getFiles(fileTypes)
     return files[random(files.length)]
