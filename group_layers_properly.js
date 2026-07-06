@@ -3,6 +3,7 @@ $.evalFile(File(thisFolder + '/imports/functions.js'));
 $.evalFile(File(thisFolder + '/imports/ps_functions.js'));
 
 
+
 function adjustment_outline(group) {
     // First of all you have to check for any adjustment layers in the group
     // as they are handled differently
@@ -16,8 +17,9 @@ function adjustment_outline(group) {
         if (layers[i].kind != LayerKind.NORMAL) {
             doc.activeLayer = layers[i]
             selectAdjOutline()		
-            created_channels.push(doc.channels.add())
-            doc.selection.store(created_channels[i])
+            var newChannel = doc.channels.add()
+            created_channels.push(newChannel)
+            doc.selection.store(newChannel)
             doc.activeChannels = doc.componentChannels
             doc.selection.deselect()
         }
@@ -29,9 +31,10 @@ function adjustment_outline(group) {
         return created_channels[0]
     } else if (created_channels.length > 1) {
         // Select all the adjument layer channels
-        for (j = 0; j < channels.length; j++) {
-            doc.selection.load(doc.channels[doc.channels.length-1], SelectionType.EXTEND)
-            doc.channels[doc.channels.length-1].remove()
+        for (j = 0; j < created_channels.length; j++) {
+            var single_adj_layer = doc.channels[doc.channels.length-1]
+            doc.selection.load(single_adj_layer, SelectionType.EXTEND)
+            single_adj_layer.remove()
         }
         // Create one single channel for the adjustment layer selections
         var adjustment_layer_outline = doc.channels.add()
@@ -71,6 +74,7 @@ function main() {
     if (adjustment_channel != undefined) {
         // Combine the adjustment selection (if there were any adjustment layers)
         doc.selection.load(adjustment_channel, SelectionType.EXTEND)
+        adjustment_channel.remove()
     }
     
     doc.selection.copy(true)

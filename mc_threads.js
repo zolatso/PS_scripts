@@ -4,13 +4,13 @@ $.evalFile(File(thisFolder + '/imports/ps_functions.js'));
 $.evalFile(File(thisFolder + '/imports/random_HSB.js'));
 
 mc_threads(
-    135,
-    10,
+    45,
+    15,
     3,
     [
-        color_hsb(21, 58, 99),
+        color_hsb(339, 83, 69),
     ],
-    [0,0,0]
+    [10,10,10]
 )
 
 function mc_threads(angle, thickness, spacing, colors, random_vary) {

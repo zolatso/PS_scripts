@@ -1,7 +1,12 @@
 var thisFolder = File($.fileName).parent;
+
 $.evalFile(File(thisFolder + '/imports/functions.js'));
 $.evalFile(File(thisFolder + '/imports/ps_functions.js'));
+$.evalFile(File(thisFolder + '/imports/wave_presets.js'));
+// this must be declared last otherwise it messes up the imports. Potential danger here when
+// imported files themselves import files
 $.evalFile(File(thisFolder + '/imports/resize_doc.js'));
+
 
 // resize_to 0 = resize to document
 // resize_to 1 = resize to selection
@@ -10,11 +15,14 @@ var resize_to = 1
 var resize_mode = 2
 // 0 = Choose a random image from the specified folders
 // 1 = Choose the specific image given in variables below from the specified folders
-var selection_mode = 0
-var folder_a = 'md/galleries'
+var image_selection_mode = 0
+var alpha_selection_mode = 0
+var folder_a = 'iphone'
 var folder_b = 'iphone'
-var file_a = 'IMG_0065.JPG'
-var file_b = 'IMG_2704.JPG'
+var file_a = 'IMG_0208.JPG'
+var file_b = 'IMG_0320.JPG'
+// This determines whether to apply a threshold effect to the alpha channel
+var threshold = true
 
 function get_resize_dims(resize_to) {
     var doc = app.activeDocument
@@ -31,18 +39,7 @@ function get_resize_dims(resize_to) {
 function effects(){
     var doc = app.activeDocument
     var dal = doc.artLayers
-    dal[0].applyWave(
-        2, 
-        700,
-        900,
-        1,
-        40,
-        random(100),
-        random(100),
-        WaveType.SQUARE,
-        UndefinedAreas.WRAPAROUND,
-        0
-    )
+    squiggly_wave()
     dal[0].duplicate()
     dal[0].applyHighPass(40)
     dal[0].blendMode = BlendMode.OVERLAY
@@ -68,6 +65,10 @@ function assemble_image_in_separate_document(resize_dims, resize_mode, selected_
         dal[0].isBackgroundLayer = false
         resize_doc(resize_dims[0], resize_dims[1], resize_mode)
         effects()
+        // Apply threshold effect to alpha layer if so requested
+        if (i % 2 != 0 && threshold == true) {
+            dal[0].threshold(128)
+        }
         // Copy the reized image, close the file, and paste in the canvas image created previously
         doc.selection.selectAll()
         doc.selection.copy()
@@ -111,9 +112,12 @@ function get_or_create_log(doc) {
 function append_to_log(log_file, selected_image, selected_alpha, folder_a, folder_b) {
     log_file.open('r')
     var content = log_file.read()
+    //alert(content)
     log_file.close()
+    
+    var entries = eval('(' + content + ')')
+    //alert(parsed instanceof Array)
 
-    var entries = (content && content.length > 0) ? eval('(' + content + ')') : []
     var d = new Date()
     var timestamp = d.getFullYear() + '-'
         + pad(d.getMonth() + 1) + '-'
@@ -145,8 +149,8 @@ function main(resize_to, resize_mode, folder_a, folder_b) {
         doc.selection.bounds[3],
     )
     var create_channel = store_selection_as_channel()
-    var selected_image = selection_mode == 1 ? get_file_from_folder(folder_a, file_a) : get_random_file_from_folder(folder_a)
-    var selected_alpha = selection_mode == 1 ? get_file_from_folder(folder_b, file_b) : get_random_file_from_folder(folder_b)
+    var selected_image = image_selection_mode == 1 ? get_file_from_folder(folder_a, file_a) : get_random_file_from_folder(folder_a)
+    var selected_alpha = alpha_selection_mode == 1 ? get_file_from_folder(folder_b, file_b) : get_random_file_from_folder(folder_b)
     var log_file = get_or_create_log(doc)
     append_to_log(log_file, selected_image, selected_alpha, folder_a, folder_b)
 

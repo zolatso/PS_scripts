@@ -1,5 +1,5 @@
-// var root = "/Volumes/Intenso/Pictures/"
-var root = "~/Images/"
+var root = "/Volumes/Intenso/Pictures/"
+//var root = "/Users/tomsaunders/Pictures/"
 
 function wave_gen(cycle, position, range, wave_type) {
     // wave_type is SINE == 0 SAW == 1
@@ -98,7 +98,8 @@ function get_random_file_from_folder(folder) {
     var fileTypes = new RegExp(/(^|\/)(?!\._)[^\/]+\.(?:jpe?g|png|psd|heic)$/i)
     var fileLoc = Folder(root + folder)
     var files = fileLoc.getFiles(fileTypes)
-    return files[random(files.length)]
+    var random_selection = files[random(files.length)]
+    return random_selection
 }
 
 function store_selection_as_channel() {
